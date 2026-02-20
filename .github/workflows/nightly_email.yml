@@ -1,0 +1,56 @@
+name: Repetitionsmail – Nightly
+
+on:
+  schedule:
+    - cron: '0 16 * * *'   # 17:00 CET (16:00 UTC), varje kväll
+  workflow_dispatch:         # Manuell trigger via GitHub UI
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── Checkout code ──────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Restore topic database from previous run ───────────────
+      - name: Download topic database (if exists)
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          name: topics-db
+          path: .
+          if_no_artifact_found: ignore
+          workflow_conclusion: success
+
+      # ── Python setup ──────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ── Run the mailer ────────────────────────────────────────
+      - name: Generate and send email
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
+          GMAIL_SENDER:      ${{ secrets.GMAIL_SENDER }}
+          GMAIL_APP_PASSWORD:${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_RECIPIENT:   ${{ secrets.GMAIL_RECIPIENT }}
+        run: python main.py
+
+      # ── Persist the updated database ──────────────────────────
+      - name: Upload topic database
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: topics-db
+          path: topics.db
+          retention-days: 90
+          overwrite: true
