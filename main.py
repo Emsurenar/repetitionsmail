@@ -131,7 +131,7 @@ def extract_topic_and_body(raw: str) -> tuple[str, str]:
     body_lines = []
     
     # Regex to catch TOPIC:, **TOPIC:**, Topic: etc.
-    topic_pattern = re.compile(r'^(?i)\s*\*?\*?TOPIC:\*?\*?\s*(.*)')
+    topic_pattern = re.compile(r'^\s*\*?\*?TOPIC:\*?\*?\s*(.*)', re.IGNORECASE)
     
     for line in lines:
         match = topic_pattern.match(line.strip())
