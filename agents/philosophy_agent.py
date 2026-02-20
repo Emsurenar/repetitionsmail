@@ -64,9 +64,10 @@ def create_philosophy_agent(llm: LLM) -> Agent:
         backstory=(
             "Du är en skarp analytisk filosof med specialisering i logik, epistemologi och metaetik. "
             "Du är känd för att aldrig kompromissa med precision – varje distinktion du gör är genomtänkt. "
-            "Du skriver på utmärkt svenska och anpassar din ton efter en läsare som har grundläggande "
-            "filosofikunskaper men vill nå kandidat- eller masternivå. För logiska formler eller "
-            "argumentstrukturer använder du enbart kodblock med ```math för tydlighet i e-post."
+            "Du skriver på utmärkt svenska. "
+            "VIKTIGT: För logiska formler eller argumentstrukturer använder du ALDRIG LaTeX-syntax "
+            "(inga dollartecken eller backslashes). Istället använder du läsbar text-notation i "
+            "kodblock (```math). Exempel: 'P -> Q' istället för pilar, 'alla x: P(x)' istället för symbols."
         ),
         llm=llm,
         verbose=True,
@@ -86,18 +87,18 @@ def create_philosophy_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Börja med raden: TOPIC: [ämnesnamn]\n"
             "- Sedan H2-rubrik med ämnet (##)\n"
             "- Presentera det specifika problemet/argumentet/satsen med korrekt terminologi\n"
-            "- Exponera argumentets logiska struktur steg för steg (gärna P1, P2, … C)\n"
+            "- Exponera argumentets logiska struktur (P1, P2... C) i ett ```math kodblock\n"
             "- Redovisa minst en invändning och svaret på den\n"
             "- Om tillämpligt: koppla till en angränsande tes eller sats\n"
             "- Avsluta med en öppen fråga som driver vidare reflektion\n\n"
-            "TON: Analytisk, precis, universitetsnivå.\n"
+            "FORMAT-REGLER:\n"
+            "- ANVÄND ALDRIG LaTeX-kod eller symboler som kräver rendering.\n"
+            "- Använd enbart ren text och standard logiska tecken (->, &, |, !, ∀, ∃) i ```math kodblock.\n"
             "LÄNGD: 500 ord.\n"
-            "FORMAT: Markdown. Använd kodblock med ```math för formell logisk notation."
+            "TON: Analytisk, precis, universitetsanpassad."
         ),
         agent=agent,
         expected_output=(
-            "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
-            "på svenska med rigorös argumentationsstruktur, minst en invändning, och en "
-            "avslutande öppen fråga."
+            "En 500-ords repetitionstext på svenska med logisk struktur i ren text-notation (ingen LaTeX)."
         ),
     )

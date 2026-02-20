@@ -1,23 +1,39 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <title>Repetitionsmail</title>
+  <!--[if mso]>
+  <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <![endif]-->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      color-scheme: light;
+      supported-color-schemes: light;
+    }
 
     body {
       margin: 0;
       padding: 0;
-      background: #f8fafc;
+      background-color: #f8fafc !important;
       font-family: 'Inter', Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+      color: #1e293b !important;
     }
 
     .wrapper {
-      background: #f8fafc;
+      background-color: #f8fafc !important;
       padding: 40px 20px;
     }
 
@@ -30,7 +46,7 @@
     .header {
       text-align: center;
       padding: 48px 32px 36px;
-      background: #ffffff;
+      background-color: #ffffff !important;
       border-radius: 20px 20px 0 0;
       border: 1px solid #e2e8f0;
       border-bottom: none;
@@ -51,15 +67,15 @@
         }
       }
 
-      ;
+      !important;
 
-      background: {
+      background-color: {
           {
           accent_bg
         }
       }
 
-      ;
+      !important;
 
       border:1px solid {
           {
@@ -77,14 +93,14 @@
       margin: 0;
       font-size: 28px;
       font-weight: 700;
-      color: #0f172a;
+      color: #0f172a !important;
       letter-spacing: -0.5px;
     }
 
     .header-date {
       margin: 10px 0 0;
       font-size: 13px;
-      color: #64748b;
+      color: #64748b !important;
       font-weight: 400;
     }
 
@@ -98,12 +114,12 @@
         }
       }
 
-      , #f8fafc);
+      , #f8fafc) !important;
     }
 
     /* Main card */
     .main-card {
-      background: #ffffff;
+      background-color: #ffffff !important;
       border: 1px solid #e2e8f0;
       border-top: none;
       border-radius: 0 0 20px 20px;
@@ -115,6 +131,7 @@
     .section {
       padding: 36px 40px;
       border-bottom: 1px solid #f1f5f9;
+      background-color: #ffffff !important;
     }
 
     .section:last-child {
@@ -141,18 +158,21 @@
     }
 
     .cat-math .section-icon {
-      background: rgba(79, 172, 254, 0.1);
+      background-color: rgba(79, 172, 254, 0.1) !important;
       border: 1px solid rgba(79, 172, 254, 0.2);
+      color: #0369a1 !important;
     }
 
     .cat-phil .section-icon {
-      background: rgba(167, 139, 250, 0.1);
+      background-color: rgba(167, 139, 250, 0.1) !important;
       border: 1px solid rgba(167, 139, 250, 0.2);
+      color: #6d28d9 !important;
     }
 
     .cat-society .section-icon {
-      background: rgba(52, 211, 153, 0.1);
+      background-color: rgba(52, 211, 153, 0.1) !important;
       border: 1px solid rgba(52, 211, 153, 0.2);
+      color: #059669 !important;
     }
 
     .section-meta {
@@ -168,62 +188,58 @@
     }
 
     .cat-math .section-label {
-      color: #0369a1;
+      color: #0369a1 !important;
     }
 
     .cat-phil .section-label {
-      color: #6d28d9;
+      color: #6d28d9 !important;
     }
 
     .cat-society .section-label {
-      color: #059669;
+      color: #059669 !important;
     }
 
     .section-topic {
       font-size: 18px;
       font-weight: 700;
-      color: #1e293b;
+      color: #1e293b !important;
       margin: 0;
       line-height: 1.3;
     }
 
     /* Body text */
     .section-body {
-      color: #334155;
+      color: #334155 !important;
       font-size: 15px;
       line-height: 1.75;
     }
 
     .section-body p {
       margin: 0 0 16px;
-    }
-
-    .section-body p:last-child {
-      margin-bottom: 0;
+      color: #334155 !important;
     }
 
     .section-body h2 {
       font-size: 18px;
       font-weight: 700;
-      color: #0f172a;
+      color: #0f172a !important;
       margin: 24px 0 10px;
     }
 
     .section-body h3 {
       font-size: 16px;
       font-weight: 600;
-      color: #1e293b;
+      color: #1e293b !important;
       margin: 18px 0 8px;
     }
 
     .section-body strong {
-      color: #0f172a;
+      color: #0f172a !important;
       font-weight: 700;
     }
 
     .section-body em {
       font-style: italic;
-      border-bottom: 1px solid #e2e8f0;
     }
 
     .section-body ul {
@@ -233,31 +249,31 @@
 
     .section-body li {
       margin-bottom: 8px;
-      color: #334155;
+      color: #334155 !important;
     }
 
     /* Code and Math Blocks */
     .section-body code {
       font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
-      background: #f1f5f9;
+      background-color: #f1f5f9 !important;
       border: 1px solid #e2e8f0;
       border-radius: 4px;
       padding: 2px 6px;
-      color: #c2410c;
+      color: #c2410c !important;
     }
 
     .section-body .math-block {
       font-family: 'JetBrains Mono', monospace;
       display: block;
       padding: 16px;
-      background: #f8fafc;
+      background-color: #f8fafc !important;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       margin: 16px 0;
       white-space: pre-wrap;
       font-size: 13px;
-      color: #0f172a;
+      color: #0f172a !important;
       line-height: 1.6;
     }
 
@@ -273,15 +289,15 @@
 
       ;
 
-      background: {
+      background-color: {
           {
           accent_bg
         }
       }
 
-      ;
+      !important;
       border-radius:0 8px 8px 0;
-      color:#475569;
+      color:#475569 !important;
       font-style:italic;
     }
 
@@ -294,24 +310,60 @@
     .footer p {
       margin: 0;
       font-size: 12px;
-      color: #94a3b8;
+      color: #94a3b8 !important;
     }
 
-    .footer a {
-      color: {
-          {
-          accent_color
-        }
+    /* FORCE LIGHT MODE - This is the key part to prevent dark mode inversion */
+    @media (prefers-color-scheme: dark) {
+
+      body,
+      .wrapper {
+        background-color: #f8fafc !important;
+        color: #1e293b !important;
       }
 
-      ;
-      text-decoration:none;
+      .header,
+      .main-card,
+      .section {
+        background-color: #ffffff !important;
+      }
+
+      .header h1,
+      .section-topic,
+      .section-body h2,
+      .section-body h3,
+      .section-body strong,
+      .section-body .math-block {
+        color: #0f172a !important;
+      }
+
+      .section-body p,
+      .section-body li {
+        color: #334155 !important;
+      }
+
+      .section-body code {
+        background-color: #f1f5f9 !important;
+        color: #c2410c !important;
+      }
+
+      .section-body .math-block {
+        background-color: #f8fafc !important;
+        border-color: #e2e8f0 !important;
+      }
     }
 
-    /* Dark Mode Handling for the client */
-    @media (prefers-color-scheme: dark) {
-      /* Keep the email light even in dark mode devices if they don't force inversion */
-      /* Most modern clients will respect these background colors */
+    /* Support for Apple Mail and others that might ignore the media query */
+    [data-ogsc] body,
+    [data-ogsc] .wrapper {
+      background-color: #f8fafc !important;
+      color: #1e293b !important;
+    }
+
+    [data-ogsc] .header,
+    [data-ogsc] .main-card,
+    [data-ogsc] .section {
+      background-color: #ffffff !important;
     }
 
     @media (max-width:600px) {
@@ -326,61 +378,62 @@
   </style>
 </head>
 
-<body>
-  <div class="wrapper">
+<body style="background-color: #f8fafc; color: #1e293b;">
+  <div class="wrapper" style="background-color: #f8fafc;">
     <div class="container">
 
       <!-- Header -->
-      <div class="header">
-        <div class="header-tag">Kvällsrepetition</div>
-        <h1>Repetitionsmail</h1>
-        <p class="header-date">{{ date }}</p>
+      <div class="header" style="background-color: #ffffff;">
+        <div class="header-tag" style="color: {{ accent_color }}; background-color: {{ accent_bg }};">Kvällsrepetition
+        </div>
+        <h1 style="color: #0f172a;">Repetitionsmail</h1>
+        <p class="header-date" style="color: #64748b;">{{ date }}</p>
       </div>
       <div class="accent-line"></div>
 
-      <div class="main-card">
+      <div class="main-card" style="background-color: #ffffff;">
 
         <!-- Section 1: Matematik -->
-        <div class="section cat-math">
+        <div class="section cat-math" style="background-color: #ffffff;">
           <div class="section-header">
             <div class="section-icon">∑</div>
             <div class="section-meta">
               <p class="section-label">Matematik &amp; Datalogi</p>
-              <p class="section-topic">{{ math_topic }}</p>
+              <p class="section-topic" style="color: #1e293b;">{{ math_topic }}</p>
             </div>
           </div>
-          <div class="section-body">{{ math_content }}</div>
+          <div class="section-body" style="color: #334155;">{{ math_content }}</div>
         </div>
 
         <!-- Section 2: Filosofi -->
-        <div class="section cat-phil">
+        <div class="section cat-phil" style="background-color: #ffffff;">
           <div class="section-header">
             <div class="section-icon">φ</div>
             <div class="section-meta">
               <p class="section-label">Filosofi &amp; Logik</p>
-              <p class="section-topic">{{ phil_topic }}</p>
+              <p class="section-topic" style="color: #1e293b;">{{ phil_topic }}</p>
             </div>
           </div>
-          <div class="section-body">{{ phil_content }}</div>
+          <div class="section-body" style="color: #334155;">{{ phil_content }}</div>
         </div>
 
         <!-- Section 3: Samhälle -->
-        <div class="section cat-society">
+        <div class="section cat-society" style="background-color: #ffffff;">
           <div class="section-header">
             <div class="section-icon">⚖</div>
             <div class="section-meta">
               <p class="section-label">Samhälle &amp; Historia</p>
-              <p class="section-topic">{{ society_topic }}</p>
+              <p class="section-topic" style="color: #1e293b;">{{ society_topic }}</p>
             </div>
           </div>
-          <div class="section-body">{{ society_content }}</div>
+          <div class="section-body" style="color: #334155;">{{ society_content }}</div>
         </div>
 
       </div><!-- .main-card -->
 
       <!-- Footer -->
       <div class="footer">
-        <p>Repetitionsmail · Genererat av AI · {{ date }}</p>
+        <p style="color: #94a3b8;">Repetitionsmail · Genererat av AI · {{ date }}</p>
       </div>
 
     </div><!-- .container -->

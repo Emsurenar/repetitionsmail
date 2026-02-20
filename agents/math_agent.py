@@ -9,7 +9,7 @@ from typing import List
 import config
 
 
-# Pool of topics the agent can draw from - Focused on introductory university courses
+# Pool of topics focused on introductory university courses
 MATH_TOPIC_POOL = [
     # Envariabelanalys (Calculus I)
     "Taylors formel och linjär approximation",
@@ -65,9 +65,11 @@ def create_math_agent(llm: LLM) -> Agent:
             "envariabelanalys, linjär algebra, flervariabelanalys, statistik och datalogi. "
             "Din styrka är att förklara de matematiska grundpelarna på ett sätt som känns "
             "substantiellt men aldrig förutsätter kunskap utöver dessa grundkurser. "
-            "Du undviker avancerad forskarnivå och fokuserar på att befästa de koncept som "
-            "studenter möter under sina första år. Du skriver alltid på utmärkt svenska. "
-            "För matematiska formler använder du enbart kodblock med ```math för tydlighet."
+            "Du skriver alltid på utmärkt svenska. "
+            "VIKTIGT: Du använder ALDRIG LaTeX-syntax (som \\begin{pmatrix} eller $...$). "
+            "Istället använder du lättläst 'textboksnotation' (ASCII-math) i kodblock (```math). "
+            "Exempel: Använd det(A) = ad - bc istället för matriser, eller [ [a, b], [c, d] ] för matriser. "
+            "Använd integraler(f(x)dx) istället för komplexa symboler. Målet är att det ska vara läsbart i e-post."
         ),
         llm=llm,
         verbose=True,
@@ -88,16 +90,22 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Därefter en H2-rubrik med ämnet (##)\n"
             "- Sätt in kontexten: varför är detta viktigt i grundutbildningen?\n"
             "- Förklara huvudkonceptet/satsen pedagogiskt med teknisk stringens\n"
-            "- Gå igenom ett konkret exempel eller ett beräkningssteg\n"
+            "- Gå igenom ett konkret exempel eller ett beräkningssteg i ett ```math kodblock\n"
             "- Lyft en vanlig fallgrop eller ett viktigt observation\n"
             "- Avsluta med en kort koppling till nästa steg i ämnet\n\n"
-            "TON: Pedagogisk, tydlig, på introducerande universitetsnivå (grundkurs).\n"
+            "FORMAT-REGLER:\n"
+            "- ANVÄND ALDRIG LaTeX (inga dollartecken, inga backslashes som \\det eller \\begin).\n"
+            "- Använd ASCII-math i kodblock (```math) för alla formler. Exempel:\n"
+            "  - det(A) = ad - bc\n"
+            "  - sqrt(x^2 + y^2)\n"
+            "  - f'(x) = 2x\n"
+            "  - Matriser: [ [1, 2], [3, 4] ]\n"
             "LÄNGD: 500 ord (viktigt).\n"
-            "FORMAT: Markdown. Använd enbart ```math kodblock för formler (ingen LaTeX med $)."
+            "TON: Pedagogisk, tydlig, på introducerande universitetsnivå (grundkurs)."
         ),
         agent=agent,
         expected_output=(
-            "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
-            "på svenska anpassad för grundkursnivå, med tydliga förklaringar och korrekta formler i kodblock."
+            "En 500-ords repetitionstext på svenska med ASCII-math i kodblock (ingen LaTeX!), "
+            "pedagogiskt anpassad för grundkursnivå."
         ),
     )

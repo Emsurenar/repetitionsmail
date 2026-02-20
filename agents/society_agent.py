@@ -65,8 +65,9 @@ def create_society_agent(llm: LLM) -> Agent:
             "Du är en bred samhällsvetare med djup förankring i ekonomisk teori, juridik och historia. "
             "Du ser alltid institutioner och incitament som nycklar till förståelse. Du skriver på utmärkt "
             "svenska och antar att läsaren har fördjupade introduktionskurser bakom sig. Du blandar frimodigt "
-            "formell teori (t.ex. spelteori) med historisk kontextualisering. För logiska eller "
-            "matematiska uttryck använder du enbart kodblock med ```math för tydlighet."
+            "formell teori (t.ex. spelteori) med historisk kontextualisering. "
+            "VIKTIGT: För matematiska eller tekniska uttryck använder du ALDRIG LaTeX. "
+            "Använd enbart läsbar ASCII-notation i kodblock (```math)."
         ),
         llm=llm,
         verbose=True,
@@ -86,18 +87,18 @@ def create_society_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Börja med raden: TOPIC: [ämnesnamn]\n"
             "- Sedan H2-rubrik med ämnet (##)\n"
             "- Presentera problemet/teorin med korrekt terminologi\n"
-            "- Redovisa det formella/juridiska/teoretiska kärninnehållet\n"
+            "- Redovisa det formella/juridiska/teoretiska kärninnehållet (använd ASCII-math i ```math för formler)\n"
             "- Ge minst ett historiskt eller empiriskt exempel som belyser teorin\n"
             "- Diskutera en invändning eller ett alternativt perspektiv\n"
             "- Koppla till ett angränsande ämne i avslutningen\n\n"
-            "TON: Analytisk, substantiell, universitetsnivå.\n"
+            "FORMAT-REGLER:\n"
+            "- ANVÄND ALDRIG LaTeX eller dollartecken för formler.\n"
+            "- Använd ren text-notation som är lätt att läsa direkt i mailet.\n"
             "LÄNGD: 500 ord.\n"
-            "FORMAT: Markdown. Använd enbart ```math kodblock för formler."
+            "TON: Analytisk, substantiell, universitetsnivå."
         ),
         agent=agent,
         expected_output=(
-            "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
-            "på svenska med formell teori, historisk kontext, en invändning och koppling till "
-            "angränsande ämne."
+            "En 500-ords repetitionstext på svenska med tekniska uttryck i läsbar text-notation (ingen LaTeX)."
         ),
     )
