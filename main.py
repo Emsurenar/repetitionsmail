@@ -65,7 +65,8 @@ def _inline(text: str) -> str:
 def md_to_html(text: str) -> str:
     """Convert a markdown string to HTML paragraphs/headings/lists."""
     # Pre-process code blocks (```math ... ```) to use our custom class
-    text = re.sub(r'```(?:math)?\n(.*?)\n```', r'<div class="math-block">\1</div>', text, flags=re.DOTALL)
+    # Handle both ```math and just ``` code blocks
+    text = re.sub(r'```(?:math)?\s*\n(.*?)\n```', r'<div class="math-block">\1</div>', text, flags=re.DOTALL)
     
     lines = text.split('\n')
     out = []
@@ -101,11 +102,12 @@ def md_to_html(text: str) -> str:
             out.append(f'<h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:24px 0 10px;">{_inline(s[2:])}</h1>')
         elif s.startswith('> '):
             out.append(f'<blockquote>{_inline(s[2:])}</blockquote>')
-        elif s.startswith('- ') or s.startswith('* '):
+        elif re.match(r'^[\-\*]\s+', s):
             if not in_list:
                 out.append('<ul style="color:#334155; margin:10px 0 16px; padding-left:22px;">')
                 in_list = True
-            out.append(f'<li style="margin-bottom:8px;">{_inline(s[2:])}</li>')
+            content = re.sub(r'^[\-\*]\s+', '', s)
+            out.append(f'<li style="margin-bottom:8px;">{_inline(content)}</li>')
         else:
             if in_list:
                 out.append('</ul>')
@@ -121,17 +123,25 @@ def md_to_html(text: str) -> str:
 def extract_topic_and_body(raw: str) -> tuple[str, str]:
     """
     Extract the TOPIC: line and return (topic, body_without_topic_line).
+    Handles variations like **TOPIC:** or leading spaces.
     Falls back to 'Okänt ämne' if TOPIC: not found.
     """
     topic = 'Okänt ämne'
     lines = raw.strip().split('\n')
     body_lines = []
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped.upper().startswith('TOPIC:'):
-            topic = stripped[6:].strip()
+    
+    # Regex to catch TOPIC:, **TOPIC:**, Topic: etc.
+    topic_pattern = re.compile(r'^(?i)\s*\*?\*?TOPIC:\*?\*?\s*(.*)')
+    
+    for line in lines:
+        match = topic_pattern.match(line.strip())
+        if match:
+            topic = match.group(1).strip()
+            # Remove optional trailing bolding
+            topic = re.sub(r'\*+\s*$', '', topic).strip()
         else:
             body_lines.append(line)
+            
     body = '\n'.join(body_lines).strip()
     return topic, body
 
