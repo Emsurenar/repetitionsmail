@@ -13,10 +13,13 @@ def generate_latex_img(latex_code: str, output_path: str):
         output_path: Path to save the PNG file.
     """
     # Configure for high quality (300 DPI for Gmail-skärpa)
-    # Ensure fonts are consistent
-    plt.rc('text', usetex=False) # Use Matplotlib's internal mathtext
+    # Enable full LaTeX support for complex environments like pmatrix
+    plt.rc('text', usetex=True) 
+    plt.rc('font', family='serif')
     
     # Create figure with a small size, will be tight-boxed later
+    # We use a white background for the figure to help with light theme, 
+    # but keep the savefig transparent.
     fig = plt.figure(figsize=(0.1, 0.1))
     
     # We add $ around the code if it's missing for mathtext
