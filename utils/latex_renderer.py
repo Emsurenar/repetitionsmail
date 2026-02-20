@@ -32,12 +32,12 @@ def generate_latex_img(latex_code: str, output_path: str):
         full_latex = f"$\\displaystyle {latex_code}$"
     
     # Render text. Using a larger fontsize helps with DPI clarity
-    plt.text(0, 0, full_latex, fontsize=20, color='black')
+    plt.text(0, 0, full_latex, fontsize=14, color='black')
     plt.axis('off')
     
-    # Save with tight bounding box to eliminate whitespace
-    # Transparent background for better dark/light mode compatibility
-    plt.savefig(output_path, bbox_inches='tight', pad_inches=0.05, dpi=300, transparent=True)
+    # Save the result with high DPI and transparent background
+    # We use bbox_inches='tight' to crop the image to the formula only
+    plt.savefig(output_path, bbox_inches='tight', pad_inches=0.05, dpi=150, transparent=True)
     plt.close(fig)
 
 if __name__ == "__main__":

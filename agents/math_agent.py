@@ -94,8 +94,8 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Lyft en vanlig fallgrop eller ett viktigt observation\n"
             "- Avsluta med en kort koppling till nästa steg i ämnet\n\n"
             "FORMAT-REGLER:\n"
-            "- Använd $$ ... $$ för ALLA matematiska formler som ska renderas snyggt.\n"
-            "- Undvik inline-latex ($ ... $) då dessa inte renderas som bilder.\n"
+            "- Använd inline-latex ($...$) för enskilda variabler och korta uttryck i löptext. \n"
+            "- Använd $$...$$ ENDAST för större, fristående formler på egna rader.\n"
             "LÄNGD: 500 ord (viktigt).\n"
             "TON: Pedagogisk, tydlig, på introducerande universitetsnivå (grundkurs)."
         ),

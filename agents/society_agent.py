@@ -93,9 +93,10 @@ def create_society_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Diskutera en invändning eller ett alternativt perspektiv\n"
             "- Koppla till ett angränsande ämne i avslutningen\n\n"
             "FORMAT-REGLER:\n"
-            "- Använd $$ ... $$ för formella uttryck som ska renderas snyggt.\n"
+            "- Använd inline-latex ($...$) för enskilda variabler och korta uttryck i löptext. \n"
+            "- Använd $$...$$ ENDAST för större, fristående formler på egna rader.\n"
             "LÄNGD: 500 ord.\n"
-            "TON: Analytisk, substantiell, universitetsnivå."
+            "TON: Institutionell, analytisk, saklig."
         ),
         agent=agent,
         expected_output=(
