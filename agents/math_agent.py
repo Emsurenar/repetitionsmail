@@ -1,6 +1,7 @@
 """
 Matematik & Datalogi agent.
 Ämnen: envariabelanalys, linjär algebra, flervariabelanalys, statistik/sannolikhetsteori, datalogi.
+Nivå: Grundkurser vid universitet (Introductory university level).
 """
 
 from crewai import Agent, Task, LLM
@@ -8,64 +9,65 @@ from typing import List
 import config
 
 
-# Pool of topics the agent can draw from
+# Pool of topics the agent can draw from - Focused on introductory university courses
 MATH_TOPIC_POOL = [
-    # Envariabelanalys
-    "Taylors formel och Lagranges restterm",
-    "L'Hôpitals regel och indeterminate former",
-    "Riemannsintegralens definition och konvergenskrav",
-    "Medelvärdessatsen och dess konsekvenser",
-    "Cauchykriteriet för konvergens av serier",
-    "Likformig kontinuitet contra punktvis kontinuitet",
-    # Linjär algebra
-    "Spektralsatsen för symmetriska matriser",
-    "Singulärvärdessönderfallet (SVD) och dess tillämpningar",
-    "Jordannormalformen och invarianta delrum",
-    "Minsta kvadratmetoden och pseudoinvers",
-    "Gram-Schmidt och QR-faktorisering",
-    "Egenvärden, diagonalisering och diagonaliserbarhetskriterier",
-    "Determinantens geometriska tolkning och multilinearitet",
-    # Flervariabelanalys
-    "Greens formel och plana flöden",
-    "Stokes sats: koppling mellan kurv- och ytintegral",
-    "Divergenssatsen (Gauss sats) i R³",
-    "Implicita funktionssatsen och inversa funktionssatsen",
-    "Jacobianmatrisen: kedjeregeln i flera variabler",
-    "Lagranges multiplikatorer: villkorlig optimering",
-    "Dubbelintegral och variabelsubstitution med Jacobian",
-    # Statistik & Sannolikhetsteori
-    "Stora talens lag: svag och stark form",
-    "Centrala gränsvärdessatsen och Gaussfördelningens dominans",
-    "Bayesiansk inferens och Bayess teorem",
-    "Markovkedjor och stationär fördelning",
-    "Hypotesprövning: typ I- och typ II-fel, p-värde",
-    "Maximum likelihood-skattning (MLE)",
-    "Betingad förväntning och martingaler",
-    # Datalogi
-    "Sökteorier i grafer: BFS, DFS och deras komplexitet",
-    "Dijkstras algoritm och kortaste vägar",
-    "Dynamisk programmering: princip och Bellmansekvationen",
-    "P, NP och beräkningskomplexitet",
-    "Rödsvarta träd och balanserade sökträd",
-    "Hashfunktioner och kollisionshantering",
-    "Turingmaskiner och haltningsproblemet",
+    # Envariabelanalys (Calculus I)
+    "Taylors formel och linjär approximation",
+    "L'Hôpitals regel och gränsvärden",
+    "Integralkalkylens fundamentalsats",
+    "Medelvärdessatsen för derivator",
+    "Partiell integration och variabelsubstitution",
+    "Konvergens av serier: kvotkriteriet och jämförelsekriteriet",
+    # Linjär algebra (Linear Algebra)
+    "Linjära ekvationssystem och Gauss-elimination",
+    "Matrisinverser och determinanter",
+    "Vektorrum, baser och dimension",
+    "Linjära avbildningar och matrisrepresentation",
+    "Egenvärden och diagonalisering av matriser",
+    "Minsta kvadratmetoden och projektioner",
+    "Gram-Schmidt-processen och ortogonalitet",
+    # Flervariabelanalys (Calculus II/Multivariable)
+    "Partiella derivator och differentierbarhet",
+    "Gradienten, riktningsderivata och tangentplan",
+    "Kedjeregeln i flera variabler",
+    "Optimering: stationära punkter och extremvärden",
+    "Lagranges multiplikatorer för villkorlig optimering",
+    "Dubbelintegraler över rektangulära och allmänna områden",
+    "Variabelsubstitution i dubbelintegraler (polära koordinater)",
+    # Statistik & Sannolikhetsteori (Probability & Stats)
+    "Sannolikhetslära: betingad sannolikhet och oberoende",
+    "Diskreta och kontinuerliga slumpvariabler",
+    "Väntevärde, varians och standardavvikelse",
+    "Normalfördelningen och Centrala gränsvärdessatsen",
+    "Hypotesprövning: p-värden och signifikansnivåer",
+    "Konfidensintervall för medelvärden",
+    "Enkel linjär regression",
+    # Datalogi (Intro CS / Algorithms)
+    "Sökningsalgoritmer: Binärsökning och linjärsökning",
+    "Sorteringsalgoritmer: Quicksort och Mergesort",
+    "Asymptotisk komplexitet: Big O-notation",
+    "Listor, stackar och köer",
+    "Binära sökträd: struktur och operationer",
+    "Hash-tabeller: princip och kollisionshantering",
+    "Grundläggande grafteori: representationer (matris/lista)",
 ]
 
 
 def create_math_agent(llm: LLM) -> Agent:
     return Agent(
-        role="Professor i Matematik och Datalogi",
+        role="Grundkurs-pedagog i Matematik och Datalogi",
         goal=(
-            "Välj ett specifikt matematiskt eller datalogikal ämne och skriv en djupgående, "
-            "rigorös repetitionstext på 500 ord för en student som redan har grundläggande förståelse."
+            "Välj ett centralt ämne från de grundläggande universitetskurserna i matematik eller datalogi "
+            "och skriv en pedagogisk, men tekniskt korrekt, repetitionstext på 500 ord."
         ),
         backstory=(
-            "Du är en erfaren matematikprofessor med djup expertis inom analys, linjär algebra, "
-            "statistik och datalogi. Du älskar att exponera de subtila, icke-uppenbara aspekterna "
-            "av välkända satser och bevis. Du skriver alltid på utmärkt svenska. Du antar att "
-            "läsaren känner till grunderna men vill fördjupa sig. Du fokuserar på nyckelsatser, "
-            "bevisteknik och kopplingar till annat material. För matematiska formler använder "
-            "du enbart kodblock med ```math för tydlighet i e-post."
+            "Du är en pedagogisk universitetslektor som undervisar i de grundläggande kurserna: "
+            "envariabelanalys, linjär algebra, flervariabelanalys, statistik och datalogi. "
+            "Din styrka är att förklara de matematiska grundpelarna på ett sätt som känns "
+            "substantiellt men aldrig förutsätter kunskap utöver dessa grundkurser. "
+            "Du undviker avancerad forskarnivå och fokuserar på att befästa de koncept som "
+            "studenter möter under sina första år. Du skriver alltid på utmärkt svenska. "
+            "För matematiska formler använder du enbart kodblock med ```math för tydlighet."
         ),
         llm=llm,
         verbose=True,
@@ -79,23 +81,23 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
         description=(
             f"ANVÄNDA ÄMNEN DE SENASTE 60 DAGARNA (undvik dessa):\n{used_str}\n\n"
             "DIN UPPGIFT:\n"
-            "1. Välj ett ämne från din domän (matematik/datalogi) som INTE finns i listan ovan.\n"
+            "1. Välj ett ämne från din domän (introducerande matematiska grundkurser) som INTE finns i listan ovan.\n"
             "2. Skriv en repetitionstext på exakt 500 ord på svenska.\n\n"
             "STRUKTUR:\n"
             "- Börja med raden: TOPIC: [ämnesnamn]\n"
             "- Därefter en H2-rubrik med ämnet (##)\n"
-            "- Sätt in kontexten: var passar detta i den matematiska helheten?\n"
-            "- Formulera satsens/teoremets exakta statement med matematisk notation\n"
-            "- Gå igenom bevisets nyckelsteg (fullständigt bevis behövs ej, men logiken ska vara tydlig)\n"
-            "- Lyft minst ett icke-uppenbart korollarium eller tillämpning\n"
-            "- Avsluta med en koppling till ett angränsande ämne\n\n"
-            "TON: Exakt, rigorös, universitetsanpassad. Anta fördjupade introduktionskurser.\n"
+            "- Sätt in kontexten: varför är detta viktigt i grundutbildningen?\n"
+            "- Förklara huvudkonceptet/satsen pedagogiskt med teknisk stringens\n"
+            "- Gå igenom ett konkret exempel eller ett beräkningssteg\n"
+            "- Lyft en vanlig fallgrop eller ett viktigt observation\n"
+            "- Avsluta med en kort koppling till nästa steg i ämnet\n\n"
+            "TON: Pedagogisk, tydlig, på introducerande universitetsnivå (grundkurs).\n"
             "LÄNGD: 500 ord (viktigt).\n"
             "FORMAT: Markdown. Använd enbart ```math kodblock för formler (ingen LaTeX med $)."
         ),
         agent=agent,
         expected_output=(
             "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
-            "på svenska med korrekt matematisk notation i kodblock, tydlig struktur och djup analys."
+            "på svenska anpassad för grundkursnivå, med tydliga förklaringar och korrekta formler i kodblock."
         ),
     )
