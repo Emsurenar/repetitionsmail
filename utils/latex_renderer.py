@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg') # Force non-GUI backend
 import matplotlib.pyplot as plt
 import os
 from pathlib import Path

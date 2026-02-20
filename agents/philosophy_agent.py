@@ -12,6 +12,7 @@ PHILOSOPHY_TOPIC_POOL = [
     # Logik & Metalogik
     "Gödels fullständighetssats: bevisstruktur och semantisk konsekvens",
     "Gödels första ofullständighetssats: oavgörbara satser i PA",
+    "Gödels första ofullständighetssats: oavgörbara satser i PA",
     "Gödels andra ofullständighetssats: konsistens och självreferers",
     "Löwenheim-Skolems sats och relativiteten hos 'oräknbar mängd'",
     "Tarskis odefinierbarhetssats för sanning",
@@ -66,7 +67,7 @@ def create_philosophy_agent(llm: LLM) -> Agent:
             "Du är känd för att aldrig kompromissa med precision – varje distinktion du gör är genomtänkt. "
             "Du skriver på utmärkt svenska. "
             "VIKTIGT: För logiska formler eller argumentstrukturer använder du LaTeX-notation inom $$ ... $$. "
-            "Exempel: Använd $$P \\rightarrow Q$$ för logiska samband. "
+            "Exempel: Använd $$P \\rightarrow Q$$ eller $$A \\wedge B$$ för logiska samband. "
             "Dessa renderas som bilder i mailet."
         ),
         llm=llm,
@@ -93,6 +94,7 @@ def create_philosophy_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Avsluta med en öppen fråga som driver vidare reflektion\n\n"
             "FORMAT-REGLER:\n"
             "- Använd $$ ... $$ för formell logik som ska renderas snyggt.\n"
+            "- Använd standard LaTeX-symboler som \\wedge, \\vee, \\neg, \\rightarrow, \\forall, \\exists.\n"
             "LÄNGD: 500 ord.\n"
             "TON: Analytisk, precis, universitetsanpassad."
         ),

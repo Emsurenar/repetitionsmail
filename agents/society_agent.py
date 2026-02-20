@@ -88,6 +88,7 @@ def create_society_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Sedan H2-rubrik med ämnet (##)\n"
             "- Presentera problemet/teorin med korrekt terminologi\n"
             "- Redovisa det formella/juridiska/teoretiska kärninnehållet (använd $$ [latex] $$ för formler)\n"
+            "- Använd standard LaTeX-symboler som \\geq, \\leq, \\neq, \\approx.\n"
             "- Ge minst ett historiskt eller empiriskt exempel som belyser teorin\n"
             "- Diskutera en invändning eller ett alternativt perspektiv\n"
             "- Koppla till ett angränsande ämne i avslutningen\n\n"
