@@ -57,43 +57,60 @@ def _inline(text: str) -> str:
     text = re.sub(r'__(.+?)__',     r'<strong>\1</strong>', text)
     text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
     text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
-    # LaTeX: $...$  → wrap in <em class="math">
-    text = re.sub(r'\$([^$]+)\$', r'<em class="math" style="font-style:italic;color:#a5b4fc;">\1</em>', text)
+    # If agent used $...$ notation, wrap it in a code tag for better readability in light theme
+    text = re.sub(r'\$([^$]+)\$', r'<code>\1</code>', text)
     return text
 
 
 def md_to_html(text: str) -> str:
     """Convert a markdown string to HTML paragraphs/headings/lists."""
+    # Pre-process code blocks (```math ... ```) to use our custom class
+    text = re.sub(r'```(?:math)?\n(.*?)\n```', r'<div class="math-block">\1</div>', text, flags=re.DOTALL)
+    
     lines = text.split('\n')
     out = []
     in_list = False
+    in_math_block = False
 
     for line in lines:
         s = line.strip()
+        
+        # Check if we are inside a pre-processed math block from the regex above
+        if '<div class="math-block">' in line:
+            out.append(line)
+            in_math_block = True
+            if '</div>' in line: in_math_block = False
+            continue
+        if in_math_block:
+            out.append(line)
+            if '</div>' in line: in_math_block = False
+            continue
+
         if not s:
             if in_list:
                 out.append('</ul>')
                 in_list = False
             out.append('')
             continue
+            
         if s.startswith('### '):
-            out.append(f'<h3 style="font-size:14px;font-weight:600;color:#cbd5e1;margin:18px 0 6px;">{_inline(s[4:])}</h3>')
+            out.append(f'<h3 style="font-size:16px;font-weight:600;color:#1e293b;margin:18px 0 6px;">{_inline(s[4:])}</h3>')
         elif s.startswith('## '):
-            out.append(f'<h2 style="font-size:16px;font-weight:600;color:#e2e8f0;margin:22px 0 8px;">{_inline(s[3:])}</h2>')
+            out.append(f'<h2 style="font-size:18px;font-weight:700;color:#0f172a;margin:24px 0 8px;">{_inline(s[3:])}</h2>')
         elif s.startswith('# '):
-            out.append(f'<h2 style="font-size:17px;font-weight:700;color:#f1f5f9;margin:24px 0 10px;">{_inline(s[2:])}</h2>')
+            out.append(f'<h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:24px 0 10px;">{_inline(s[2:])}</h1>')
         elif s.startswith('> '):
             out.append(f'<blockquote>{_inline(s[2:])}</blockquote>')
         elif s.startswith('- ') or s.startswith('* '):
             if not in_list:
-                out.append('<ul>')
+                out.append('<ul style="color:#334155; margin:10px 0 16px; padding-left:22px;">')
                 in_list = True
-            out.append(f'<li>{_inline(s[2:])}</li>')
+            out.append(f'<li style="margin-bottom:8px;">{_inline(s[2:])}</li>')
         else:
             if in_list:
                 out.append('</ul>')
                 in_list = False
-            out.append(f'<p>{_inline(s)}</p>')
+            out.append(f'<p style="margin-bottom:16px;">{_inline(s)}</p>')
 
     if in_list:
         out.append('</ul>')

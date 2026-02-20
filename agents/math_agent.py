@@ -91,11 +91,8 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Avsluta med en koppling till ett angränsande ämne\n\n"
             "TON: Exakt, rigorös, universitetsanpassad. Anta fördjupade introduktionskurser.\n"
             "LÄNGD: 500 ord (viktigt).\n"
-            "FORMAT: Markdown med LaTeX inom $...$ för formler."
         ),
         agent=agent,
         expected_output=(
-            "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
-            "på svenska med korrekt matematisk notation, tydlig struktur och djup analys."
         ),
     )

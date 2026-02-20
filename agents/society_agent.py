@@ -61,14 +61,7 @@ def create_society_agent(llm: LLM) -> Agent:
             "Välj ett specifikt ämne inom nationalekonomi, juridik, spelteori, geopolitik eller historia "
             "och skriv en djupgående repetitionstext på 500 ord som integrerar teori med historisk/institutionell kontext."
         ),
-        backstory=(
-            "Du är en bred samhällsvetare med djup förankring i ekonomisk teori, juridik och historia. "
-            "Du ser alltid institutioner och incitament som nycklar till förståelse. Du skriver på utmärkt "
-            "svenska och antar att läsaren har fördjupade introduktionskurser bakom sig. Du blandar frimodigt "
-            "formell teori (t.ex. spelteori) med historisk kontextualisering. Du är aldrig ytlig och "
-            "undviker journalistisk förenkling."
-        ),
-        llm=llm,
+,StartLine:64,TargetContent:        llm=llm,
         verbose=True,
     )
 
