@@ -41,9 +41,9 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY:    ${{ secrets.OPENAI_API_KEY }}
           GMAIL_SENDER:      ${{ secrets.GMAIL_SENDER }}
-          GMAIL_APP_PASSWORD:${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           GMAIL_RECIPIENT:   ${{ secrets.GMAIL_RECIPIENT }}
-        run: python main.py
+        run: python3 main.py
 
       # ── Persist the updated database ──────────────────────────
       - name: Upload topic database
