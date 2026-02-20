@@ -85,7 +85,7 @@ def md_to_html(text: str, label: str) -> tuple[str, list]:
             generate_latex_img(clean_latex, str(filepath))
             attachments.append((str(filepath), filename))
             # Replace in original text with a unique placeholder
-            placeholder = f"LATEX_IMAGE_PLACEHOLDER_{label}_{i}"
+            placeholder = f"LATEX_IMAGE_PLACEHOLDER_formula_{label}_{i}"
             text = text.replace(f"$${latex}$$", placeholder)
         except Exception as e:
             logger.error(f"Failed to render LaTeX: {clean_latex[:20]}... - {e}")
