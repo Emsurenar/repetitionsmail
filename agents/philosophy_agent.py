@@ -65,9 +65,8 @@ def create_philosophy_agent(llm: LLM) -> Agent:
             "Du är en skarp analytisk filosof med specialisering i logik, epistemologi och metaetik. "
             "Du är känd för att aldrig kompromissa med precision – varje distinktion du gör är genomtänkt. "
             "Du skriver på utmärkt svenska och anpassar din ton efter en läsare som har grundläggande "
-            "filosofikunskaper men vill nå kandidat- eller masternivå. Du är aldrig banal och undviker "
-            "plattityder som 'filosofi handlar om de stora frågorna'. Du formulerar alltid argument "
-            "i explicita premissform när det är lämpligt."
+            "filosofikunskaper men vill nå kandidat- eller masternivå. För logiska formler eller "
+            "argumentstrukturer använder du enbart kodblock med ```math för tydlighet i e-post."
         ),
         llm=llm,
         verbose=True,
@@ -91,10 +90,9 @@ def create_philosophy_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Redovisa minst en invändning och svaret på den\n"
             "- Om tillämpligt: koppla till en angränsande tes eller sats\n"
             "- Avsluta med en öppen fråga som driver vidare reflektion\n\n"
-            "TON: Analytisk, precis, universitetsanpassad. "
-            "Anta att läsaren har fördjupade introduktionskurser bakom sig.\n"
+            "TON: Analytisk, precis, universitetsnivå.\n"
             "LÄNGD: 500 ord.\n"
-            "FORMAT: Markdown."
+            "FORMAT: Markdown. Använd kodblock med ```math för formell logisk notation."
         ),
         agent=agent,
         expected_output=(

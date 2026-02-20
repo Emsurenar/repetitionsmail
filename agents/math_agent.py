@@ -62,10 +62,10 @@ def create_math_agent(llm: LLM) -> Agent:
         backstory=(
             "Du är en erfaren matematikprofessor med djup expertis inom analys, linjär algebra, "
             "statistik och datalogi. Du älskar att exponera de subtila, icke-uppenbara aspekterna "
-            "av välkända satser och bevis. Du skriver alltid på utmärkt svenska med korrekt "
-            "matematisk notation (LaTeX-format inom $...$). Du antar att läsaren känner till "
-            "grunderna men vill fördjupa sig. Du fokuserar på nyckelsatser, bevisteknik och "
-            "kopplingar till annat material."
+            "av välkända satser och bevis. Du skriver alltid på utmärkt svenska. Du antar att "
+            "läsaren känner till grunderna men vill fördjupa sig. Du fokuserar på nyckelsatser, "
+            "bevisteknik och kopplingar till annat material. För matematiska formler använder "
+            "du enbart kodblock med ```math för tydlighet i e-post."
         ),
         llm=llm,
         verbose=True,
@@ -91,8 +91,11 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Avsluta med en koppling till ett angränsande ämne\n\n"
             "TON: Exakt, rigorös, universitetsanpassad. Anta fördjupade introduktionskurser.\n"
             "LÄNGD: 500 ord (viktigt).\n"
+            "FORMAT: Markdown. Använd enbart ```math kodblock för formler (ingen LaTeX med $)."
         ),
         agent=agent,
         expected_output=(
+            "Raden 'TOPIC: [ämnesnamn]' på första raden, sedan en 500-ords repetitionstext "
+            "på svenska med korrekt matematisk notation i kodblock, tydlig struktur och djup analys."
         ),
     )

@@ -61,7 +61,14 @@ def create_society_agent(llm: LLM) -> Agent:
             "Välj ett specifikt ämne inom nationalekonomi, juridik, spelteori, geopolitik eller historia "
             "och skriv en djupgående repetitionstext på 500 ord som integrerar teori med historisk/institutionell kontext."
         ),
-,StartLine:64,TargetContent:        llm=llm,
+        backstory=(
+            "Du är en bred samhällsvetare med djup förankring i ekonomisk teori, juridik och historia. "
+            "Du ser alltid institutioner och incitament som nycklar till förståelse. Du skriver på utmärkt "
+            "svenska och antar att läsaren har fördjupade introduktionskurser bakom sig. Du blandar frimodigt "
+            "formell teori (t.ex. spelteori) med historisk kontextualisering. För logiska eller "
+            "matematiska uttryck använder du enbart kodblock med ```math för tydlighet."
+        ),
+        llm=llm,
         verbose=True,
     )
 
@@ -83,10 +90,9 @@ def create_society_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Ge minst ett historiskt eller empiriskt exempel som belyser teorin\n"
             "- Diskutera en invändning eller ett alternativt perspektiv\n"
             "- Koppla till ett angränsande ämne i avslutningen\n\n"
-            "TON: Analytisk, substantiell, universitetsnivå. "
-            "Anta fördjupade introduktionskurser hos läsaren.\n"
+            "TON: Analytisk, substantiell, universitetsnivå.\n"
             "LÄNGD: 500 ord.\n"
-            "FORMAT: Markdown."
+            "FORMAT: Markdown. Använd enbart ```math kodblock för formler."
         ),
         agent=agent,
         expected_output=(
