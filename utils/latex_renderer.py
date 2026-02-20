@@ -15,6 +15,7 @@ def generate_latex_img(latex_code: str, output_path: str):
     # Configure for high quality (300 DPI for Gmail-skärpa)
     # Enable full LaTeX support for complex environments like pmatrix
     plt.rc('text', usetex=True) 
+    plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
     plt.rc('font', family='serif')
     
     # Create figure with a small size, will be tight-boxed later
