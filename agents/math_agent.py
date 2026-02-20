@@ -66,10 +66,9 @@ def create_math_agent(llm: LLM) -> Agent:
             "Din styrka är att förklara de matematiska grundpelarna på ett sätt som känns "
             "substantiellt men aldrig förutsätter kunskap utöver dessa grundkurser. "
             "Du skriver alltid på utmärkt svenska. "
-            "VIKTIGT: Du använder ALDRIG LaTeX-syntax (som \\begin{pmatrix} eller $...$). "
-            "Istället använder du lättläst 'textboksnotation' (ASCII-math) i kodblock (```math). "
-            "Exempel: Använd det(A) = ad - bc istället för matriser, eller [ [a, b], [c, d] ] för matriser. "
-            "Använd integraler(f(x)dx) istället för komplexa symboler. Målet är att det ska vara läsbart i e-post."
+            "VIKTIGT: För matematiska formler använder du enbart LaTeX-notation inom $$ ... $$. "
+            "Exempel: Använd $$\\det(A) = ad - bc$$ för formler på egna rader. "
+            "Dessa kommer att renderas som bilder i mailet, så var noga med att syntaxen är korrekt."
         ),
         llm=llm,
         verbose=True,
@@ -90,22 +89,18 @@ def create_math_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Därefter en H2-rubrik med ämnet (##)\n"
             "- Sätt in kontexten: varför är detta viktigt i grundutbildningen?\n"
             "- Förklara huvudkonceptet/satsen pedagogiskt med teknisk stringens\n"
-            "- Gå igenom ett konkret exempel eller ett beräkningssteg i ett ```math kodblock\n"
+            "- Presentera centrala formler i fristående block med $$ [latex] $$\n"
+            "- Gå igenom ett konkret exempel eller ett beräkningssteg\n"
             "- Lyft en vanlig fallgrop eller ett viktigt observation\n"
             "- Avsluta med en kort koppling till nästa steg i ämnet\n\n"
             "FORMAT-REGLER:\n"
-            "- ANVÄND ALDRIG LaTeX (inga dollartecken, inga backslashes som \\det eller \\begin).\n"
-            "- Använd ASCII-math i kodblock (```math) för alla formler. Exempel:\n"
-            "  - det(A) = ad - bc\n"
-            "  - sqrt(x^2 + y^2)\n"
-            "  - f'(x) = 2x\n"
-            "  - Matriser: [ [1, 2], [3, 4] ]\n"
+            "- Använd $$ ... $$ för ALLA matematiska formler som ska renderas snyggt.\n"
+            "- Undvik inline-latex ($ ... $) då dessa inte renderas som bilder.\n"
             "LÄNGD: 500 ord (viktigt).\n"
             "TON: Pedagogisk, tydlig, på introducerande universitetsnivå (grundkurs)."
         ),
         agent=agent,
         expected_output=(
-            "En 500-ords repetitionstext på svenska med ASCII-math i kodblock (ingen LaTeX!), "
-            "pedagogiskt anpassad för grundkursnivå."
+            "En 500-ords repetitionstext på svenska med korrekt LaTeX-notation inom $$ ... $$ för formler."
         ),
     )

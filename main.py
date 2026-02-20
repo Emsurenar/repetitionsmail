@@ -25,6 +25,7 @@ from agents import (
     create_society_agent,    create_society_task,
 )
 from tools.gmail_sender import GmailSender
+from utils.latex_renderer import generate_latex_img
 
 # ── Logging ─────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -62,31 +63,41 @@ def _inline(text: str) -> str:
     return text
 
 
-def md_to_html(text: str) -> str:
-    """Convert a markdown string to HTML paragraphs/headings/lists."""
-    # Pre-process code blocks (```math ... ```) to use our custom class
-    # Handle both ```math and just ``` code blocks
-    text = re.sub(r'```(?:math)?\s*\n(.*?)\n```', r'<div class="math-block">\1</div>', text, flags=re.DOTALL)
+def md_to_html(text: str, label: str) -> tuple[str, list]:
+    """
+    Convert a markdown string to HTML paragraphs/headings/lists.
+    Also extracts $$...$$ blocks and renders them to CID images.
+    Returns (html, list_of_cid_attachments).
+    """
+    attachments = []
     
+    # 1. Extract and render LaTeX blocks
+    # We use a placeholder and then replace it after paragraph processing
+    # to avoid the paragraph wrapper from breaking the div layout.
+    latex_blocks = re.findall(r'\$\$(.*?)\$\$', text, flags=re.DOTALL)
+    
+    for i, latex in enumerate(latex_blocks):
+        clean_latex = latex.strip()
+        filename = f"formula_{label}_{i}.png"
+        filepath = config.LOG_DIR / filename
+        
+        try:
+            generate_latex_img(clean_latex, str(filepath))
+            attachments.append((str(filepath), filename))
+            # Replace in original text with a unique placeholder
+            placeholder = f"LATEX_IMAGE_PLACEHOLDER_{label}_{i}"
+            text = text.replace(f"$${latex}$$", placeholder)
+        except Exception as e:
+            logger.error(f"Failed to render LaTeX: {clean_latex[:20]}... - {e}")
+            text = text.replace(f"$${latex}$$", f'<div class="math-fallback">[{clean_latex}]</div>')
+
     lines = text.split('\n')
     out = []
     in_list = False
-    in_math_block = False
 
     for line in lines:
         s = line.strip()
         
-        # Check if we are inside a pre-processed math block from the regex above
-        if '<div class="math-block">' in line:
-            out.append(line)
-            in_math_block = True
-            if '</div>' in line: in_math_block = False
-            continue
-        if in_math_block:
-            out.append(line)
-            if '</div>' in line: in_math_block = False
-            continue
-
         if not s:
             if in_list:
                 out.append('</ul>')
@@ -112,11 +123,26 @@ def md_to_html(text: str) -> str:
             if in_list:
                 out.append('</ul>')
                 in_list = False
-            out.append(f'<p style="margin-bottom:16px;">{_inline(s)}</p>')
+            
+            # Check if this line is just our placeholder
+            processed_line = _inline(s)
+            
+            # Post-replace placeholders with actual CID img tags
+            for filename in [a[1] for a in attachments if label in a[1]]:
+                placeholder = f"LATEX_IMAGE_PLACEHOLDER_{filename.replace('.png', '')}"
+                if placeholder in processed_line:
+                    img_tag = f'<div style="text-align:center; margin:20px 0;"><img src="cid:{filename}" alt="LaTeX Formula" style="max-width:100%; height:auto;"></div>'
+                    processed_line = processed_line.replace(placeholder, img_tag)
+            
+            # If the placeholder was the ONLY thing on the line, don't wrap in <p> if it already has <div>
+            if '<div' in processed_line:
+                out.append(processed_line)
+            else:
+                out.append(f'<p style="margin-bottom:16px;">{processed_line}</p>')
 
     if in_list:
         out.append('</ul>')
-    return '\n'.join(out)
+    return '\n'.join(out), attachments
 
 
 # ── Topic extraction ─────────────────────────────────────────────────────────
@@ -252,9 +278,11 @@ def run(test_mode: bool = False):
     phil_topic,    phil_body    = extract_topic_and_body(results['philosophy'])
     society_topic, society_body = extract_topic_and_body(results['society'])
 
-    math_html    = md_to_html(math_body)
-    phil_html    = md_to_html(phil_body)
-    society_html = md_to_html(society_body)
+    math_html,    math_attach = md_to_html(math_body, "math")
+    phil_html,    phil_attach = md_to_html(phil_body, "phil")
+    society_html, soc_attach  = md_to_html(society_body, "soc")
+    
+    all_attachments = math_attach + phil_attach + soc_attach
 
     # Build email
     today   = datetime.now()
@@ -278,7 +306,7 @@ def run(test_mode: bool = False):
         print(f"\n{'='*60}")
         print(f"Preview: {out}")
         print(f"Subjects: {subject}")
-        print(f"Topics: Math={math_topic!r}, Phil={phil_topic!r}, Soc={society_topic!r}")
+        print(f"Attachments: {len(all_attachments)}")
         print(f"{'='*60}\n")
     else:
         sender = GmailSender()
@@ -286,6 +314,7 @@ def run(test_mode: bool = False):
             recipient=config.GMAIL_RECIPIENT,
             subject=subject,
             html_content=html,
+            attachments=all_attachments,
         )
         if ok:
             # Log topics to DB only after successful send

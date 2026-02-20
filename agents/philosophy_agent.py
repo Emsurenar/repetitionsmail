@@ -65,9 +65,9 @@ def create_philosophy_agent(llm: LLM) -> Agent:
             "Du är en skarp analytisk filosof med specialisering i logik, epistemologi och metaetik. "
             "Du är känd för att aldrig kompromissa med precision – varje distinktion du gör är genomtänkt. "
             "Du skriver på utmärkt svenska. "
-            "VIKTIGT: För logiska formler eller argumentstrukturer använder du ALDRIG LaTeX-syntax "
-            "(inga dollartecken eller backslashes). Istället använder du läsbar text-notation i "
-            "kodblock (```math). Exempel: 'P -> Q' istället för pilar, 'alla x: P(x)' istället för symbols."
+            "VIKTIGT: För logiska formler eller argumentstrukturer använder du LaTeX-notation inom $$ ... $$. "
+            "Exempel: Använd $$P \\rightarrow Q$$ för logiska samband. "
+            "Dessa renderas som bilder i mailet."
         ),
         llm=llm,
         verbose=True,
@@ -87,18 +87,17 @@ def create_philosophy_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Börja med raden: TOPIC: [ämnesnamn]\n"
             "- Sedan H2-rubrik med ämnet (##)\n"
             "- Presentera det specifika problemet/argumentet/satsen med korrekt terminologi\n"
-            "- Exponera argumentets logiska struktur (P1, P2... C) i ett ```math kodblock\n"
+            "- Exponera argumentets logiska struktur (P1, P2... C) i block med $$ [latex] $$\n"
             "- Redovisa minst en invändning och svaret på den\n"
             "- Om tillämpligt: koppla till en angränsande tes eller sats\n"
             "- Avsluta med en öppen fråga som driver vidare reflektion\n\n"
             "FORMAT-REGLER:\n"
-            "- ANVÄND ALDRIG LaTeX-kod eller symboler som kräver rendering.\n"
-            "- Använd enbart ren text och standard logiska tecken (->, &, |, !, ∀, ∃) i ```math kodblock.\n"
+            "- Använd $$ ... $$ för formell logik som ska renderas snyggt.\n"
             "LÄNGD: 500 ord.\n"
             "TON: Analytisk, precis, universitetsanpassad."
         ),
         agent=agent,
         expected_output=(
-            "En 500-ords repetitionstext på svenska med logisk struktur i ren text-notation (ingen LaTeX)."
+            "En 500-ords repetitionstext på svenska med logisk struktur i LaTeX-notation inom $$ ... $$."
         ),
     )

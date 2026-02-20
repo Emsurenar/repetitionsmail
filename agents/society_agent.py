@@ -66,8 +66,8 @@ def create_society_agent(llm: LLM) -> Agent:
             "Du ser alltid institutioner och incitament som nycklar till förståelse. Du skriver på utmärkt "
             "svenska och antar att läsaren har fördjupade introduktionskurser bakom sig. Du blandar frimodigt "
             "formell teori (t.ex. spelteori) med historisk kontextualisering. "
-            "VIKTIGT: För matematiska eller tekniska uttryck använder du ALDRIG LaTeX. "
-            "Använd enbart läsbar ASCII-notation i kodblock (```math)."
+            "VIKTIGT: För matematiska eller tekniska uttryck (t.ex. spelteoretiska matriser) använder du "
+            "LaTeX-notation inom $$ ... $$. Dessa renderas som bilder i mailet."
         ),
         llm=llm,
         verbose=True,
@@ -87,18 +87,17 @@ def create_society_task(agent: Agent, used_topics: List[str]) -> Task:
             "- Börja med raden: TOPIC: [ämnesnamn]\n"
             "- Sedan H2-rubrik med ämnet (##)\n"
             "- Presentera problemet/teorin med korrekt terminologi\n"
-            "- Redovisa det formella/juridiska/teoretiska kärninnehållet (använd ASCII-math i ```math för formler)\n"
+            "- Redovisa det formella/juridiska/teoretiska kärninnehållet (använd $$ [latex] $$ för formler)\n"
             "- Ge minst ett historiskt eller empiriskt exempel som belyser teorin\n"
             "- Diskutera en invändning eller ett alternativt perspektiv\n"
             "- Koppla till ett angränsande ämne i avslutningen\n\n"
             "FORMAT-REGLER:\n"
-            "- ANVÄND ALDRIG LaTeX eller dollartecken för formler.\n"
-            "- Använd ren text-notation som är lätt att läsa direkt i mailet.\n"
+            "- Använd $$ ... $$ för formella uttryck som ska renderas snyggt.\n"
             "LÄNGD: 500 ord.\n"
             "TON: Analytisk, substantiell, universitetsnivå."
         ),
         agent=agent,
         expected_output=(
-            "En 500-ords repetitionstext på svenska med tekniska uttryck i läsbar text-notation (ingen LaTeX)."
+            "En 500-ords repetitionstext på svenska med tekniska uttryck i LaTeX inom $$ ... $$."
         ),
     )

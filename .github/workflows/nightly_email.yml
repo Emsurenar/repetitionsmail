@@ -43,6 +43,7 @@ jobs:
           GMAIL_SENDER:      ${{ secrets.GMAIL_SENDER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           GMAIL_RECIPIENT:   ${{ secrets.GMAIL_RECIPIENT }}
+          MPLBACKEND: Agg
         run: python3 main.py
 
       # ── Persist the updated database ──────────────────────────
