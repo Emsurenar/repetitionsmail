@@ -32,7 +32,7 @@ LOG_DIR       = PROJECT_ROOT / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
 # LLM model
-LLM_MODEL = "anthropic/claude-sonnet-4-5-20250929"
+LLM_MODEL = "anthropic/claude-opus-4-6"
 
 
 def validate_config() -> bool:
