@@ -22,8 +22,13 @@ def generate_latex_img(latex_code: str, output_path: str):
     # but keep the savefig transparent.
     fig = plt.figure(figsize=(0.1, 0.1))
     
-    # We add $ around the code if it's missing for mathtext
-    full_latex = f"${latex_code}$"
+    # Handle delimiters smartly:
+    # If the AI uses a block environment, don't wrap it in $...$
+    if any(env in latex_code for env in [r"\begin{align", r"\begin{equation", r"\begin{gather", r"\begin{pmatrix"]):
+        full_latex = latex_code
+    else:
+        # Use displaystyle for full size sums/integrals even in simple lines
+        full_latex = f"$\\displaystyle {latex_code}$"
     
     # Render text. Using a larger fontsize helps with DPI clarity
     plt.text(0, 0, full_latex, fontsize=20, color='black')

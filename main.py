@@ -131,7 +131,7 @@ def md_to_html(text: str, label: str) -> tuple[str, list]:
             for filename in [a[1] for a in attachments if label in a[1]]:
                 placeholder = f"LATEX_IMAGE_PLACEHOLDER_{filename.replace('.png', '')}"
                 if placeholder in processed_line:
-                    img_tag = f'<div style="text-align:center; margin:20px 0;"><img src="cid:{filename}" alt="LaTeX Formula" style="max-width:100%; height:auto;"></div>'
+                    img_tag = f'<div class="math-block" style="text-align:center; margin:20px 0; padding:15px; background-color:#f8fafc; border-radius:8px;"><img src="cid:{filename}" alt="LaTeX Formula" style="max-width:100%; height:auto;"></div>'
                     processed_line = processed_line.replace(placeholder, img_tag)
             
             # If the placeholder was the ONLY thing on the line, don't wrap in <p> if it already has <div>
