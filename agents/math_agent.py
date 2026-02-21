@@ -29,7 +29,7 @@ MATH_TOPIC_POOL = [
     # Flervariabelanalys (Calculus II/Multivariable)
     "Partiella derivator och differentierbarhet",
     "Gradienten, riktningsderivata och tangentplan",
-    "Kedjeregeln i flera variabler",
+    "Riemannsummor och integrationens rigorösa definition",
     "Optimering: stationära punkter och extremvärden",
     "Lagranges multiplikatorer för villkorlig optimering",
     "Dubbelintegraler över rektangulära och allmänna områden",
@@ -55,10 +55,11 @@ MATH_TOPIC_POOL = [
 
 def create_math_agent(llm: LLM) -> Agent:
     return Agent(
-        role="Grundkurs-pedagog i Matematik och Datalogi",
+        role="Universitetslektor i Matematik och Datalogi",
         goal=(
-            "Välj ett centralt ämne från de grundläggande universitetskurserna i matematik eller datalogi "
-            "och skriv en pedagogisk, men tekniskt korrekt, repetitionstext på 500 ord."
+            "Välj ett centralt och något mer avancerat ämne från universitetskurser i matematik eller datalogi "
+            "(t.ex. Riemannsummor framför enklare derivata) "
+            "och skriv en pedagogisk, men matematiskt rigorös repetitionstext på 500 ord."
         ),
         backstory=(
             "Du är en pedagogisk universitetslektor som undervisar i de grundläggande kurserna: "

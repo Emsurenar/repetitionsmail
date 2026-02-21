@@ -58,38 +58,51 @@ def _inline(text: str) -> str:
     text = re.sub(r'__(.+?)__',     r'<strong>\1</strong>', text)
     text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
     text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
-    # If agent used $...$ notation, wrap it in a code tag for better readability in light theme
-    text = re.sub(r'\$([^$]+)\$', r'<code>\1</code>', text)
     return text
 
 
 def md_to_html(text: str, label: str) -> tuple[str, list]:
     """
     Convert a markdown string to HTML paragraphs/headings/lists.
-    Also extracts $$...$$ blocks and renders them to CID images.
+    Also extracts $$...$$ and $...$ blocks and renders them to CID images.
     Returns (html, list_of_cid_attachments).
     """
     attachments = []
     
-    # 1. Extract and render LaTeX blocks
-    # We use a placeholder and then replace it after paragraph processing
-    # to avoid the paragraph wrapper from breaking the div layout.
+    # 1. Extract and render BLOCK LaTeX -> $$...$$
     latex_blocks = re.findall(r'\$\$(.*?)\$\$', text, flags=re.DOTALL)
-    
     for i, latex in enumerate(latex_blocks):
         clean_latex = latex.strip()
-        filename = f"formula_{label}_{i}.png"
+        filename = f"form_b_{label}_{i}.png"
         filepath = config.LOG_DIR / filename
         
         try:
-            generate_latex_img(clean_latex, str(filepath))
+            generate_latex_img(clean_latex, str(filepath), inline=False)
             attachments.append((str(filepath), filename))
-            # Replace in original text with a unique placeholder
-            placeholder = f"LATEX_IMAGE_PLACEHOLDER_formula_{label}_{i}"
+            # No underscores in placeholder so _inline regex won't mangle it 
+            placeholder = f"LATEX-BLOCK-{label}-{i}"
             text = text.replace(f"$${latex}$$", placeholder)
         except Exception as e:
-            logger.error(f"Failed to render LaTeX: {clean_latex[:20]}... - {e}")
+            logger.error(f"Failed to render LaTeX block: {clean_latex[:20]}... - {e}")
             text = text.replace(f"$${latex}$$", f'<div class="math-fallback">[{clean_latex}]</div>')
+
+    # 2. Extract and render INLINE LaTeX -> $...$
+    inline_blocks = re.findall(r'(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)', text)
+    # Deduplicate to avoid recreating same image
+    inline_blocks = list(set(inline_blocks))
+    for i, latex in enumerate(inline_blocks):
+        clean_latex = latex.strip()
+        filename = f"form_i_{label}_{i}.png"
+        filepath = config.LOG_DIR / filename
+        
+        try:
+            generate_latex_img(clean_latex, str(filepath), inline=True)
+            attachments.append((str(filepath), filename))
+            placeholder = f"LATEX-INLINE-{label}-{i}"
+            text = text.replace(f"${latex}$", placeholder)
+        except Exception as e:
+            logger.error(f"Failed to render LaTeX inline: {clean_latex[:20]}... - {e}")
+            text = text.replace(f"${latex}$", f'<code>{clean_latex}</code>')
 
     lines = text.split('\n')
     out = []
@@ -124,17 +137,25 @@ def md_to_html(text: str, label: str) -> tuple[str, list]:
                 out.append('</ul>')
                 in_list = False
             
-            # Check if this line is just our placeholder
             processed_line = _inline(s)
             
-            # Post-replace placeholders with actual CID img tags
-            for filename in [a[1] for a in attachments if label in a[1]]:
-                placeholder = f"LATEX_IMAGE_PLACEHOLDER_{filename.replace('.png', '')}"
-                if placeholder in processed_line:
-                    img_tag = f'<div class="math-block" style="text-align:center; margin:20px 0; padding:15px; background-color:#f8fafc; border-radius:8px;"><img src="cid:{filename}" alt="LaTeX Formula" style="max-width:100%; height:auto;"></div>'
-                    processed_line = processed_line.replace(placeholder, img_tag)
-            
-            # If the placeholder was the ONLY thing on the line, don't wrap in <p> if it already has <div>
+            # Revert placeholders
+            for filepath, filename in attachments:
+                if filename.startswith('form_b_'):
+                    idx = filename.split('_')[-1].replace('.png', '')
+                    lbl = filename.split('_')[2]
+                    ph = f"LATEX-BLOCK-{lbl}-{idx}"
+                    if ph in processed_line:
+                        img_tag = f'<div class="math-block" style="text-align:center; margin:20px 0; padding:15px; background-color:#f8fafc; border-radius:8px;"><img src="cid:{filename}" alt="LaTeX Block" style="max-width:100%; height:auto;"></div>'
+                        processed_line = processed_line.replace(ph, img_tag)
+                elif filename.startswith('form_i_'):
+                    idx = filename.split('_')[-1].replace('.png', '')
+                    lbl = filename.split('_')[2]
+                    ph = f"LATEX-INLINE-{lbl}-{idx}"
+                    if ph in processed_line:
+                        img_tag = f'<img src="cid:{filename}" alt="LaTeX Inline" style="max-width:100%; height:1.6em; vertical-align:middle; margin:0 2px;">'
+                        processed_line = processed_line.replace(ph, img_tag)
+                        
             if '<div' in processed_line:
                 out.append(processed_line)
             else:
@@ -202,19 +223,28 @@ def build_html(
     society_topic: str, society_html: str,
     date_str: str,
     accent: str,
+    main_title: str,
 ) -> str:
     template_path = config.TEMPLATE_DIR / 'email.html'
     tmpl = template_path.read_text(encoding='utf-8')
 
-    tmpl = tmpl.replace('{{ date }}',           date_str)
-    tmpl = tmpl.replace('{{ accent_color }}',   accent)
-    tmpl = tmpl.replace('{{ accent_bg }}',      accent_bg(accent))
-    tmpl = tmpl.replace('{{ math_topic }}',     math_topic)
-    tmpl = tmpl.replace('{{ math_content }}',   math_html)
-    tmpl = tmpl.replace('{{ phil_topic }}',     phil_topic)
-    tmpl = tmpl.replace('{{ phil_content }}',   phil_html)
-    tmpl = tmpl.replace('{{ society_topic }}',  society_topic)
-    tmpl = tmpl.replace('{{ society_content }}',society_html)
+    replacements = {
+        'date': date_str,
+        'accent_color': accent,
+        'accent_bg': accent_bg(accent),
+        'math_topic': math_topic,
+        'math_content': math_html,
+        'phil_topic': phil_topic,
+        'phil_content': phil_html,
+        'society_topic': society_topic,
+        'society_content': society_html,
+        'main_title': main_title,
+    }
+    
+    for k, v in replacements.items():
+        # Use lambda to avoid interpreting backslashes in value 'v' as regex references
+        tmpl = re.sub(r'\{\{\s*' + k + r'\s*\}\}', lambda m: v, tmpl)
+
     return tmpl
 
 
@@ -288,12 +318,14 @@ def run(test_mode: bool = False):
     today   = datetime.now()
     accent  = WEEKDAY_ACCENT[today.weekday()]
     date_sv = swedish_date()
+    
+    main_title = f"{society_topic.split(':')[0]} · {phil_topic.split(':')[0]} · {math_topic.split(':')[0]}"
 
     html = build_html(
         math_topic,    math_html,
         phil_topic,    phil_html,
         society_topic, society_html,
-        date_sv, accent,
+        date_sv, accent, main_title
     )
 
     subject = f"Repetitionsmail · {math_topic.split(':')[0]} · {phil_topic.split(':')[0]} · {date_sv}"

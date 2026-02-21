@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 import os
 from pathlib import Path
 
-def generate_latex_img(latex_code: str, output_path: str):
+def generate_latex_img(latex_code: str, output_path: str, inline: bool = False):
     """
     Generates a PNG image from LaTeX code using Matplotlib's mathtext.
     
     Args:
         latex_code: The LaTeX string (without $ if they are added here).
         output_path: Path to save the PNG file.
+        inline: If True, renders as inline math instead of displaystyle.
     """
     # Configure for high quality (300 DPI for Gmail-skärpa)
     # Enable full LaTeX support for complex environments like pmatrix
@@ -28,8 +29,11 @@ def generate_latex_img(latex_code: str, output_path: str):
     if any(env in latex_code for env in [r"\begin{align", r"\begin{equation", r"\begin{gather", r"\begin{pmatrix"]):
         full_latex = latex_code
     else:
-        # Use displaystyle for full size sums/integrals even in simple lines
-        full_latex = f"$\\displaystyle {latex_code}$"
+        if inline:
+            full_latex = f"${latex_code}$"
+        else:
+            # Use displaystyle for full size sums/integrals even in simple lines
+            full_latex = f"$\\displaystyle {latex_code}$"
     
     # Render text. Using a larger fontsize helps with DPI clarity
     plt.text(0, 0, full_latex, fontsize=14, color='black')
